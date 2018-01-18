@@ -16,10 +16,11 @@ if (!$db_selected) {
 
 // Table creation, if database is there       
       $tsql = 'CREATE TABLE `urls` (
-		  `uid` int(11) NOT NULL,
+		  `uid` int(11) NOT NULL AUTO_INCREMENT,
 		  `url` varchar(1024) DEFAULT NULL,
 		  `unique_chars` varchar(25) NOT NULL,
-		  `visit_count` int(11) NOT NULL DEFAULT 0
+		  `visit_count` int(11) NOT NULL DEFAULT 0,
+      		PRIMARY KEY (uid)
 		)';
       
       mysqli_select_db($link, 'tinyurl');
