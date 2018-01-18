@@ -11,7 +11,7 @@ It contains an implementation of general features you might need in your future 
 
 You should install basic php environment like WAMP or XAMPP for easy deployment. (Pref: XAMPP)
 
-### Installation procedure
+### Deployment procedure
 
 - Download from github
 - unzip the folder, if zip file downloaded
