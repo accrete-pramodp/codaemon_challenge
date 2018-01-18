@@ -16,7 +16,8 @@ You should install basic php environment like WAMP or XAMPP for easy deployment.
 - Download from github
 - unzip the folder, if zip file downloaded
 - Rename codaemon_challenge-master to codaemon_challenge
-- Copy that folder(codaemon_challenge) into xampp/htdocs
+- if XAMPP installed, Copy that folder(codaemon_challenge) into xampp/htdocs/
+- if WAMP installed, Copy that folder(codaemon_challenge) into WAMP/www/
 - run localhost/codaemon_challenge/createdb.php through browser (DB and table creation)
 - run localhost/codaemon_challenge
 
