@@ -9,7 +9,7 @@ It contains an implementation of general features you might need in your future 
 
 ### Prerequisites
 
-You should install basic php environment like WAMP or XAMPP for easy deployment. (Pref: XAMPP)
+You should install basic php environment like WAMP or XAMPP for easy deployment.
 
 ### Deployment procedure
 
