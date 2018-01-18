@@ -5,12 +5,12 @@ if (!$link) {
     die('Could not connect: ' . mysqli_error());
 }
 
-// Make tinyurl2 the current database
-$db_selected = mysqli_select_db( $link, 'tinyurl2');
+// Make tinyurl the current database
+$db_selected = mysqli_select_db( $link, 'tinyurl');
 
 if (!$db_selected) {
   // If we couldn't, then it either doesn't exist, or we can't see it.
-  $sql = 'CREATE DATABASE tinyurl2';
+  $sql = 'CREATE DATABASE tinyurl';
 
   if (mysqli_query($link, $sql)) {
      // echo "Database my_db created successfully\n";
@@ -22,14 +22,14 @@ if (!$db_selected) {
 		  `visit_count` int(11) NOT NULL DEFAULT 0
 		)';
       
-      mysqli_select_db($link, 'tinyurl2');
+      mysqli_select_db($link, 'tinyurl');
       $retval = mysqli_query( $link, $tsql );
        
       if(! $retval ) {
       	die('Could not create table: ' . mysqli_error($link));
       }
        
-      echo "Table urls created successfully in tinyurl2 Database\n";
+      echo "Table urls created successfully in tinyurl Database\n";
       
   } else {
       echo 'Error creating database: ' . mysqli_error($link) . "\n";
