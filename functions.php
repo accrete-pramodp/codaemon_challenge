@@ -1,26 +1,32 @@
 <?php 
-include("config.php");
+include("config.php"); 
+
+/*
+ * To generate 4 characters as a tiny url
+ */
 function generate_chars()
 {
  $num_chars = 4; //max length of random chars
- $i = 0;
- $my_keys = "123456789abcdefghijklmnopqrstuvwxyz"; //keys to be chosen from
+ $intCounter = 0;
+ $my_keys = "123456789abcdefghijklmnopqrstuvwxyz"; //keys to be choose from
  $keys_length = strlen($my_keys);
- $url  = "";
- while($i<$num_chars)
+ $strUrl  = "";
+ while($intCounter<$num_chars)
  {
   $rand_num = mt_rand(1, $keys_length-1);
-  $url .= $my_keys[$rand_num];
-  $i++;
+  $strUrl .= $my_keys[$rand_num];
+  $intCounter++;
  }
- return $url;
+ return $strUrl;
 }
 
-function isUnique($chars)
+/*
+ * check the uniqueness of the chars
+ */
+function isUnique($strChars)
 {
-	//check the uniqueness of the chars
 	global $link;
-	$query = "SELECT * FROM `urls` WHERE `unique_chars`='".$chars."'";
+	$query = "SELECT * FROM `urls` WHERE `unique_chars`='".$strChars."'";
 	$row = mysqli_query($link, $query);
 	if( mysqli_num_rows($row)>0 ){
 		return false;
@@ -29,6 +35,9 @@ function isUnique($chars)
 	}
 }
 
+/*
+ * To check url is already present in DB or not
+ */
 function isThere($url)
 {
 	global $link;
@@ -41,59 +50,80 @@ function isThere($url)
 	}
 }
 
-function visit_count($url) {
+/*
+ * To get the count of visited url
+ */
+function visit_count($strUrl) {
 	global $link;
-	$query = "SELECT visit_count FROM `urls` WHERE `url`='".$url."'";
-	$r = mysqli_query($link, $query);
-	$row = mysqli_fetch_row($r);
-	return $row[0];
+	$query = "SELECT visit_count FROM `urls` WHERE `url`='".$strUrl."'";
+	$row = mysqli_query($link, $query);
+	$result = mysqli_fetch_row($row);
+	return $result[0];
 }
 
-function redirect($url) {
+/*
+ * Using unique_chars, incrementing visit_count in DB
+ */
+function redirect($strUrl) {
 	global $link;
-	$query = "SELECT url FROM `urls` WHERE `unique_chars`='".$url."'";
-	$r = mysqli_query($link, $query);
-	if(mysqli_num_rows($r)>0){
-		$row = mysqli_fetch_row($r);
+	$query = "SELECT url FROM `urls` WHERE `unique_chars`='".$strUrl."'";
+	$row = mysqli_query($link, $query);
+	if(mysqli_num_rows($row)>0){
+		$result = mysqli_fetch_row($row);
 		
-		$count = visit_count($row[0]) + 1;		
-		$q = "UPDATE `urls` set visit_count='".$count."' where  `unique_chars`='".$url."'";
-		$res = mysqli_query($link, $q);		
+		$count = visit_count($result[0]) + 1;		
+		$query = "UPDATE `urls` set visit_count='".$count."' where `unique_chars`='".$strUrl."'";
+		mysqli_query($link, $query);		
 	} else {
-		$row = 'Sorry! Record not matched';
+		$result = 'Sorry! Record not matched';
 	}
-	return $row[0];
+	return $result[0];
 }
 
-function create($receivedUrl)
-{
+/*
+ * Main function, which is responsible for generate tinyurl
+ */
+function create($strReceivedUrl)
+{	
 	global $link; //make the link variable in the config.php, global
-	global $config; //make the $config array in the config.php, global
-	$chars = generate_chars(); //generate random characters
-	/* We check the uniqueness of the characters. The following loop
-	 continues until it generates unique characters */
-	while( !isUnique($chars) )
+	$strChars = generate_chars(); //generate random characters
+	
+	/*
+	 * We check the uniqueness of the characters.
+	 * The following loop continues until it generates unique characters 
+	 */
+	while( !isUnique($strChars) )
 	{
-		$chars = generate_chars();
+		$strChars = generate_chars();
 	}
-	$url = $receivedUrl;//get the url
-	$url = trim($url);//trim it to remove whitespace
-	$url = mysqli_real_escape_string($link, $url);//sanitize data
+	
+	/*
+	 * Append http:// string to received url, if this is missing
+	 * 
+	 */
+	if(strpos($strReceivedUrl,'http://')===false){
+		$strReceivedUrl='http://'.$strReceivedUrl;
+	}
+	
+	$strUrl = $strReceivedUrl;			//get the url
+	$strUrl = trim($strUrl);			//trim it to remove whitespace
+	$strUrl = mysqli_real_escape_string($link, $strUrl);	//sanitize data
 	
 
 	/* Now we check whether the url is already there in the database. */
-	if(!isThere($url))
+	if(!isThere($strUrl))
 	{
-		//url is not in the database
-		$q = "INSERT INTO `urls` (url, unique_chars) VALUES ('".$url."', '".$chars."' )";
-		$r = mysqli_query($link, $q); //insert into the database
-		if(mysqli_affected_rows($link)){
-		 //ok, inserted. now get the data
-		 $q = "SELECT * FROM `urls` WHERE `url`='".$url."'";
-		 $r = mysqli_query($link, $q);
-		 $row = mysqli_fetch_row($r);
-		 return $row[2]."!~!".$row[1]; //$row[2] is where the random chars are
-		}else{
+		$query = "INSERT INTO `urls` (url, unique_chars) VALUES ('".$strUrl."', '".$strChars."' )";
+		mysqli_query($link, $query);
+		
+		if(mysqli_affected_rows($link)) {
+			
+		//To show the data, after inserting into DB
+		 $query = "SELECT * FROM `urls` WHERE `url`='".$strUrl."'";
+		 $row = mysqli_query($link, $query);
+		 $result = mysqli_fetch_row($row);
+		 return $result[2]."!~!".$result[1];
+		} else {
 		//problem with the database
 		 echo "Sorry, some problem with the database. Please try again.";
 		}
@@ -101,10 +131,10 @@ function create($receivedUrl)
 	else
 	{
 		//url is already there. so no need to insert again. Just get the data from database
-		$q = "SELECT * FROM `urls` WHERE `url` = '".$url."'";
-		$r = mysqli_query($link, $q);
-		$row = mysqli_fetch_row($r);
-		return $row[2]."!~!".$row[1];
+		$query = "SELECT * FROM `urls` WHERE `url` = '".$strUrl."'";
+		$row = mysqli_query($link, $query);
+		$result = mysqli_fetch_row($row);
+		return $result[2]."!~!".$result[1];
 	}
 }
 
