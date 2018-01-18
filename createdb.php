@@ -5,16 +5,16 @@ if (!$link) {
     die('Could not connect: ' . mysqli_error());
 }
 
-// Make tinyurl the current database
+// Make tinyurl as the current database
 $db_selected = mysqli_select_db( $link, 'tinyurl');
 
+// If not any database is selected
 if (!$db_selected) {
-  // If we couldn't, then it either doesn't exist, or we can't see it.
   $sql = 'CREATE DATABASE tinyurl';
 
   if (mysqli_query($link, $sql)) {
-     // echo "Database my_db created successfully\n";
-      
+
+// Table creation, if database is there       
       $tsql = 'CREATE TABLE `urls` (
 		  `uid` int(11) NOT NULL,
 		  `url` varchar(1024) DEFAULT NULL,
@@ -31,7 +31,7 @@ if (!$db_selected) {
        
       echo "Table urls created successfully in tinyurl Database\n";
       
-  } else {
+  } else {	// If unable to create database
       echo 'Error creating database: ' . mysqli_error($link) . "\n";
   }
 }
