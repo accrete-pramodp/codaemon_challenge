@@ -86,20 +86,5 @@ $lists = url_list();
   <p>Footer Text</p>
 </footer>
 
-
-<script language="javascript" type="text/javascript">
-function dataSubmit() {
-	$.ajax({
-	    type: "POST",
-	    url: 'url_submit.php',
-	    data: {url: $("#url").val()},
-	    success: function(data){
-		   var response = JSON.parse(data);
-		    var actual_data = response.split("!~!");
-	        $("#result_data").html("<a href='"+actual_data[1]+"'>"+actual_data[0]+"</a>");
-	    }
-	});
-}
-</script>
 </body>
 </html>
