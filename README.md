@@ -21,7 +21,7 @@ You should install basic php environment like WAMP or XAMPP for easy deployment.
 - run localhost/codaemon_challenge/createdb.php through browser (DB and table creation)
 - run localhost/codaemon_challenge
 
-## Authors
+## Author
 
 * **Pramod Kumar Pal**
 
