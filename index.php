@@ -59,7 +59,7 @@
         <button type="button" class="btn btn-success" onclick="dataSubmit()">Submit</button>
       </form>
       <br><br>
-      <div id="result_data"></div>
+      <div id="result_data" style="font-size: 25px;"></div>
       <br><br>
       
       <div id="short_url_area" class="hide">

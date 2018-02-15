@@ -6,6 +6,9 @@ include("config.php");
  */
 function generate_chars()
 {
+ $date = new DateTime();
+ $timestamp = ($date->getTimestamp() * 3); //Multiplying 3 times with current datetime for confuse to hackers
+ 
  $num_chars = 4; //max length of random chars
  $intCounter = 0;
  $my_keys = "123456789abcdefghijklmnopqrstuvwxyz"; //keys to be choose from
@@ -17,7 +20,8 @@ function generate_chars()
   $strUrl .= $my_keys[$rand_num];
   $intCounter++;
  }
- return $strUrl;
+ $strCompUrl = $strUrl.$timestamp;
+ return base_convert((string)$strCompUrl,8,16); //To convert octal to hexadecimal
 }
 
 /*
